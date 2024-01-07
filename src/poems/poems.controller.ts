@@ -15,6 +15,7 @@ export class PoemsController {
   }
 
   @Get(':userId')
+  // TODO: take the user from the auth JWT token
   async getPoemsByUser(@Param('userId') userId: string) {
     return this.poemService.getPoemsByUser(parseInt(userId));
   }
