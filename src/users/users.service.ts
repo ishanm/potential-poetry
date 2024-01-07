@@ -19,7 +19,7 @@ export class UsersService {
     const user = await this.prisma.user.create({
       data,
     });
-    return sign({ userId: user.id }, 'your-secret-key', {
+    return sign({ userId: user.id }, process.env.JWT_TOKEN, {
       expiresIn: '1h',
     });
   }

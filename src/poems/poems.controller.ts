@@ -11,7 +11,7 @@ export class PoemsController {
     @Body('prompt') prompt: string,
     @Body('authToken') token: string,
   ) {
-    const { userId } = verify(token, 'your-secret-key') as any;
+    const { userId } = verify(token, process.env.JWT_TOKEN) as any;
     return {
       poem: await this.poemService.generatePoem(parseInt(userId), prompt),
     };
@@ -19,7 +19,7 @@ export class PoemsController {
 
   @Get(':authToken')
   async getPoemsByUser(@Param('authToken') token: string) {
-    const { userId } = verify(token, 'your-secret-key') as any;
+    const { userId } = verify(token, process.env.JWT_TOKEN) as any;
     const poems = await this.poemService.getPoemsByUser(parseInt(userId));
     return poems.map((poem) => {
       return {
