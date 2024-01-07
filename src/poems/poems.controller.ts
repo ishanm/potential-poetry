@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PoemsService } from './poems.service';
+import { verify } from 'jsonwebtoken';
 
 @Controller('poems')
 export class PoemsController {
@@ -8,20 +9,21 @@ export class PoemsController {
   @Post('')
   async generatePoem(
     @Body('prompt') prompt: string,
-    // TODO: take the user from the auth JWT token
-    @Body('userId') userId: string,
+    @Body('authToken') token: string,
   ) {
+    const { userId } = verify(token, 'your-secret-key') as any;
     return {
       poem: await this.poemService.generatePoem(parseInt(userId), prompt),
     };
   }
 
-  @Get(':userId')
-  // TODO: take the user from the auth JWT token
-  async getPoemsByUser(@Param('userId') userId: string) {
+  @Get(':authToken')
+  async getPoemsByUser(@Param('authToken') token: string) {
+    const { userId } = verify(token, 'your-secret-key') as any;
     const poems = await this.poemService.getPoemsByUser(parseInt(userId));
     return poems.map((poem) => {
       return {
+        id: poem.id,
         authorName: poem.user.name,
         poem: poem.generatedPoem,
         publishedDate: poem.createdAt,
