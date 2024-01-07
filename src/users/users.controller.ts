@@ -8,9 +8,9 @@ export class UsersController {
   @Post('')
   async signupUser(
     @Body() userData: { name: string; email: string },
-  ): Promise<{ token }> {
+  ): Promise<{ authToken }> {
     return {
-      token: await this.userService.registerUser(userData),
+      authToken: await this.userService.registerUser(userData),
     };
   }
 }
