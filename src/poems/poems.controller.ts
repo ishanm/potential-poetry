@@ -11,12 +11,21 @@ export class PoemsController {
     // TODO: take the user from the auth JWT token
     @Body('userId') userId: string,
   ) {
-    return await this.poemService.generatePoem(parseInt(userId), prompt);
+    return {
+      poem: await this.poemService.generatePoem(parseInt(userId), prompt),
+    };
   }
 
   @Get(':userId')
   // TODO: take the user from the auth JWT token
   async getPoemsByUser(@Param('userId') userId: string) {
-    return this.poemService.getPoemsByUser(parseInt(userId));
+    const poems = await this.poemService.getPoemsByUser(parseInt(userId));
+    return poems.map((poem) => {
+      return {
+        authorName: poem.user.name,
+        poem: poem.generatedPoem,
+        publishedDate: poem.createdAt,
+      };
+    });
   }
 }
