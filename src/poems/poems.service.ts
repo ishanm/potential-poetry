@@ -18,6 +18,14 @@ export class PoemsService {
     return generatedPoem;
   }
 
+  async getPoemsByUser(userId: number) {
+    return this.prisma.poem.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
   private async getChatGPTResponse(poemPrompt: string) {
     const prompt = `Given this user prompt, please create a poem out of it: ${poemPrompt}`;
     const requestUrl = 'https://api.openai.com/v1/chat/completions';
